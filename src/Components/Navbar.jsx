@@ -24,8 +24,9 @@ const Navbar = () => {
       </div>
       <ul
         tabIndex={0}
-        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-        <li><Link to="dashboard">Dashboard</Link></li>
+        className="menu menu-sm dropdown-content bg-base-100 text-neutral rounded-box z-[1] mt-3 w-52 p-2 shadow">
+         <li><Link to="/">Home</Link></li>
+         <li><Link to="dashboard">Dashboard</Link></li>
         <li><Link to="profile">Profile</Link></li>
         <li><Link to="login">Login</Link></li>
         <li><Link to="register">Regitser</Link></li>
@@ -40,7 +41,7 @@ const Navbar = () => {
         <li><Link to="profile">Profile</Link></li>
         <li><Link to="login">Login</Link></li>
         <li><Link to="register">Regitser</Link></li>
-    </ul>
+    </ul> 
   </div>
   <div className="navbar-end">
     <a className="btn btn-error">Log Out</a>
