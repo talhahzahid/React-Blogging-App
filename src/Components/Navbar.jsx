@@ -34,7 +34,8 @@ const Navbar = () => {
     <a className="btn btn-ghost text-xl">Blogging App</a>
   </div>
   <div className="navbar-center hidden lg:flex">
-    <ul className="menu menu-horizontal px-1 ">
+    <ul className="menu menu-horizontal px-1 text-[1rem]">
+    <li><Link to="/">Home</Link></li>
     <li><Link to="dashboard">Dashboard</Link></li>
         <li><Link to="profile">Profile</Link></li>
         <li><Link to="login">Login</Link></li>
