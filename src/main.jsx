@@ -11,6 +11,7 @@ import Register from './Pages/Register.jsx'
 import Profile from './Pages/Profile.jsx'
 import Notfind from './Pages/Notfind.jsx'
 import Singleuser from './Pages/Singleuser.jsx'
+import ProtectedRoutes from './Components/Protectedroutes.jsx'
 
 const router = createBrowserRouter([
   {
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
       },
       {
         path : "dashboard",
-        element : <Dashboard/>,
+        element :  <ProtectedRoutes component={<Dashboard/>}/>
       },
       {
         path : "login",
@@ -35,11 +36,11 @@ const router = createBrowserRouter([
       },
       {
         path : "profile",
-        element :  <Profile/>
+        element :  <ProtectedRoutes component={<Profile/>}/>
       },
       {
         path : "singleuser",
-        element : <Singleuser/>,
+        element : <ProtectedRoutes component={<Singleuser/>}/>
       },
       {
         path : '*',
