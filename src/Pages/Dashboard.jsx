@@ -6,7 +6,6 @@ const Dashboard = () => {
   const {
     register,
     handleSubmit,
-    watch,
     reset,
     formState: { errors },
   } = useForm()
@@ -39,12 +38,17 @@ const Dashboard = () => {
 </div>
 {
   data.length > 0 ? data.map((item,index)=>{
-    return <div key={index}>
-      <p>{item.Title}</p>
-      <p>{item.mind}</p>
-      <hr />
+    return <div key={index} >
+   <div className='flex justify-center m-5 '>
+   <div className="card bg-neutral-content w-[70rem] shadow-xl ">
+  <div className="card-body">
+    <h2 className="card-title">{item.Title}</h2>
+    <p>{item.mind}</p>
+  </div>
+</div>
+   </div>
     </div>
-  }):<h1>No Blog Founds</h1>
+  }):<h1 className='text-center mt-5 text-2xl'>No Blog Founds</h1>
 }
     </>
   )

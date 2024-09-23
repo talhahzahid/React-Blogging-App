@@ -1,6 +1,8 @@
 import React from 'react'
 import { useForm } from "react-hook-form"
-import signUpUser from "../Config/firebase/firebasemethod"
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from '../Config/firebase/firebaseconfig';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -9,54 +11,57 @@ const Register = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm()
+
+  const navigate = useNavigate();
   
   const registerUser = async (data) => {
-    console.log(data);
-    try {
-      const userData = await signUpUser({
-        email: email.current.value,
-        password: password.current.value,
-        fullName: FirstNamee.current.value,
-        LastName : LastName.current.value,
-      })
-      console.log(userData);
-
-    } catch (error) {
-      console.error(error);
-
-    }
-
-
+    console.log(data);  
+    createUserWithEmailAndPassword(auth, data.email, data.password)
+  .then((userCredential) => {
+    const user = userCredential.user;
+    console.log(user);
+    navigate("/dashboard")
+  })
+  .catch((error) => {
+    const errorMessage = error.message;
+    console.log(errorMessage);
+  });
     
   }
   return (
     <>
-      <h1 className="text-center mt-5 text-2xl">Register</h1>
-      <div className="flex items-center justify-center h-[80vh]">
-        <form onSubmit={handleSubmit(registerUser)} className="text-center">
-          <input type="text" placeholder="First Namee" className="input input-bordered input-neutral w-full max-w-xs mb-4 block"
-            {...register("FirstNamee", { required: true })} />
-          {errors.FirstNamee && <span className='text-error'>This field is required</span>}
-          <input type="text" placeholder="Last Name" className="input input-bordered input-neutral w-full max-w-xs mb-4 block"
-            {...register("LastName", { required: true })} />
-          {errors.LastName && <span className='text-error'>This field is required</span>}
-          <input type="email" placeholder="email" className="input input-bordered input-neutral w-full max-w-xs mb-4 block"
-            {...register("email", { required: true })} />
-          {errors.email && <span className='text-error'>This field is required</span>}
-          <input type="password" placeholder="Password" className="input input-bordered input-neutral w-full max-w-xs mb-4 block" 
-            {...register("password", { required: true })}/>
-          {errors.password && <span className='text-error'>This field is required</span>}
-          <input type="file" placeholder="Password" className="file-input w-full max-w-xs input-bordered mb-4 block " 
-            {...register("file", { required: true })}/>
-          <button className="btn btn-primary">Register</button>
-        </form>
-      </div>
-
+<div className="flex items-center justify-center h-[80vh] bg-gray-100">
+  <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-xs">
+    <h1 className="text-center text-2xl font-bold mb-6">Register</h1>
+    <form onSubmit={handleSubmit(registerUser)} className="space-y-4">
+      <input
+        type="text" placeholder="First Name" className="input input-bordered input-neutral w-full"
+        {...register("FirstName", { required: true })}
+      />
+      {errors.FirstName && <span className='text-error text-sm'>This field is required</span>}
+      <input type="text" placeholder="Last Name" className="input input-bordered input-neutral w-full"
+        {...register("LastName", { required: true })}
+      />
+      {errors.LastName && <span className='text-error text-sm'>This field is required</span>}
+      <input  type="email" placeholder="Email" className="input input-bordered input-neutral w-full"
+        {...register("email", { required: true })}
+      />
+      {errors.email && <span className='text-error text-sm'>This field is required</span>}
+      <input  type="password"  placeholder="Password"  className="input input-bordered input-neutral w-full"
+        {...register("password", { required: true })}
+      />
+      {errors.password && <span className='text-error text-sm'>This field is required</span>}
+      <button className="btn btn-primary w-full">Register</button>
+    </form>
+  </div>
+</div>
     </>
   )
 }
 
 export default Register
+
+          {/* <input type="file" placeholder="Password" className="file-input w-full max-w-xs input-bordered mb-4 block " 
+            {...register("file", { required: true })}/> */}
