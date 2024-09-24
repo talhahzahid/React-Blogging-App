@@ -1,53 +1,34 @@
-// import React from 'react'
-// import {  signOut } from "firebase/auth";
-// import { auth } from '../Config/firebase/firebaseconfig';
 
-// const Home = () => {
+import React, { useState } from 'react';
+import { collection, getDocs } from "firebase/firestore"; 
+import { db } from '../Config/firebase/firebaseconfig';
 
-
-// function LogOut(){
-//   const auth = getAuth();
-// signOut(auth).then(() => {
-//   // Sign-out successful.
-// }).catch((error) => {
-//   // An error happened.
-// });
-// }
-
-//   return (
-//     <>
-//     <h1 className="text-center mt-3 text-2xl">Home</h1>
-
-//   <button onClick={LogOut}> sign out</button>
-
-//     </>
-//   )
-// }
-
-// export default Home
-
-
-import React from 'react';
-import { signOut, getAuth } from 'firebase/auth';
-import { auth } from '../Config/firebase/firebaseconfig';
 
 const Home = () => {
-  function LogOut() {
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.
-        console.log("Sign-out successful.");
-      })
-      .catch((error) => {
-        // An error happened.
-        console.error("Sign-out error:", error);
-      });
+ 
+  const [data , setData] = useState(null)
+
+  const getData = async () =>{
+    const querySnapshot = await getDocs(collection(db, "Blogs"));
+querySnapshot.forEach((doc) => {
+  // console.log(`${doc.id} ${doc.data()}`);
+  console.log(`${doc.id} =>`, doc.data());
+  setData(...doc.data())
+});
   }
+  getData()
 
   return (
     <>
       <h1 className="text-center mt-3 text-2xl">Home</h1>
-      <button onClick={LogOut}>Sign Out</button>
+      {
+        data ? data.map((item , index)=>{
+          return <div key={index}>
+            <p>{item.Title}</p>
+            <p>{item.mind}</p>
+          </div>
+        }):<h1>Loading...</h1>
+      }
     </>
   );
 }

@@ -1,8 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import { signOut, getAuth } from 'firebase/auth';
+import { auth } from '../Config/firebase/firebaseconfig';
 
 
 const Navbar = () => {
+
+  function LogOut() {
+    signOut(auth)
+      .then(() => {
+        console.log("Sign-out successful.");
+      })
+      .catch((error) => {
+        console.error("Sign-out error:", error);
+      });
+  }
+
   return (
     <>
     <div className="navbar bg-primary text-white">
@@ -24,12 +37,10 @@ const Navbar = () => {
       </div>
       <ul
         tabIndex={0}
-        className="menu menu-sm dropdown-content bg-base-100 text-neutral rounded-box z-[1] mt-3 w-52 p-2 shadow">
+        className="menu menu-sm dropdown-content bg-base-100 text-black rounded-box z-[1] mt-3 w-52 p-2 shadow">
          <li><Link to="/">Home</Link></li>
          <li><Link to="dashboard">Dashboard</Link></li>
         <li><Link to="profile">Profile</Link></li>
-        <li><Link to="login">Login</Link></li>
-        <li><Link to="register">Regitser</Link></li>
       </ul>
     </div>
     <a className="btn btn-ghost text-xl">Blogging App</a>
@@ -38,13 +49,11 @@ const Navbar = () => {
     <ul className="menu menu-horizontal px-1 text-[1rem]">
     <li><Link to="/">Home</Link></li>
     <li><Link to="dashboard">Dashboard</Link></li>
-        <li><Link to="profile">Profile</Link></li>
-        <li><Link to="login">Login</Link></li>
-        <li><Link to="register">Regitser</Link></li>
+    <li><Link to="profile">Profile</Link></li>
     </ul> 
   </div>
   <div className="navbar-end">
-    <a className="btn btn-error">Log Out</a>
+    <button onClick={LogOut} className="btn btn-error">Log Out</button>
   </div>
 </div>
     </>

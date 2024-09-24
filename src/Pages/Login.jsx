@@ -2,7 +2,7 @@ import React from 'react'
 import { useForm } from "react-hook-form"
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../Config/firebase/firebaseconfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,Link } from 'react-router-dom';
 
 
 const Login = () => {
@@ -45,8 +45,10 @@ const Login = () => {
       {errors.password && <span className='text-error text-sm'>This field is required</span>}
 
       <button className="btn btn-primary w-full">Login</button>
-    </form>
-  </div>
+    </form>  <br />
+<Link to="/register" className="m-3 text-blue-600 hover:text-blue-800 underline">
+  Don't have an account? Register </Link> 
+   </div>
 </div>
 
     </>
