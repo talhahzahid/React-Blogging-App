@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import { signOut, getAuth } from 'firebase/auth';
+import { signOut, } from 'firebase/auth';
 import { auth } from '../Config/firebase/firebaseconfig';
 
 
@@ -10,6 +10,7 @@ const Navbar = () => {
     signOut(auth)
       .then(() => {
         console.log("Sign-out successful.");
+        alert("Sign out")
       })
       .catch((error) => {
         console.error("Sign-out error:", error);

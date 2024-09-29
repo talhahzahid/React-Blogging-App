@@ -1,52 +1,74 @@
-import React from 'react'
-import { useForm } from "react-hook-form"
-import { createUserWithEmailAndPassword, } from "firebase/auth";
+import React from 'react';
+import { useForm } from "react-hook-form";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../Config/firebase/firebaseconfig';
 import { collection, addDoc } from "firebase/firestore";
 import { db } from '../Config/firebase/firebaseconfig';
 import { useNavigate } from 'react-router-dom';
-
-
-
-
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const Register = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm();
   const navigate = useNavigate();
 
-  // autentication in firebase 
   const registerUser = async (data) => {
     console.log(data);
-    createUserWithEmailAndPassword(auth, data.email, data.password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log(user);
-        navigate("/dashboard")
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        console.log(errorMessage);
-      });
 
-    // Add data into firebase 
-    const addData = async () => {
-      try {
-        const docRef = await addDoc(collection(db, "User"), {
-          FirstName: data.FirstName,
-          LastName: data.LastName,
-          Email: data.email,
-        });
-        console.log("Document written with ID: ", docRef.id);
-      } catch (e) {
-        console.error("Error adding document: ", e);
+    
+    // Authentication user 
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password);
+      const user = userCredential.user;
+      const file = data.profileImage[0]; 
+      if (!file) {
+        console.error("No file selected!");
+        return;
       }
+
+      const url = await uploadImage(file, `profile_images/${user.uid}/${file.name}`);
+      if (url) {
+        console.log("iamge done ", url);
+        await addData({ ...data, imageUrl: url, userId: user.uid });
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error(error.message);
     }
-    addData()
-  }
+  };
+
+//  using sir fuction 
+  const uploadImage = async (file, path) => {
+    const storage = getStorage();
+    const storageRef = ref(storage, path);
+    try {
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      return url;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  };
+
+  // Data Add in Firebasa Finally 
+  const addData = async (data) => {
+    try {
+      const docRef = await addDoc(collection(db, "User"), {
+        FirstName: data.FirstName,
+        LastName: data.LastName,
+        Email: data.email,
+        ImageUrl: data.imageUrl,
+        UserId: data.userId,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
   return (
     <>
       <div className="flex items-center justify-center h-[80vh] bg-gray-100">
@@ -70,13 +92,15 @@ const Register = () => {
               {...register("password", { required: true })}
             />
             {errors.password && <span className='text-error text-sm'>This field is required</span>}
-            <input type="file" placeholder="profileImage" className="file-input w-full max-w-xs input-bordered mb-4 block "
+            <input type="file" className="file-input w-full max-w-xs input-bordered mb-4 block"
               {...register("profileImage", { required: true })} />
+            {errors.profileImage && <span className='text-error text-sm'>This field is required</span>}
             <button className="btn btn-primary w-full">Register</button>
           </form>
         </div>
       </div>
     </>
-  )
-}
-export default Register
+  );
+};
+
+export default Register;
